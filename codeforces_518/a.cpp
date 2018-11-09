@@ -24,19 +24,13 @@ int main() {
     cin.tie(0);
     cout.precision(10);
 
-    long long n, m, k, l;
+    long long allCoinsCount, friendsCount, currentCoinsCount, newCoinsCount;
 
-    cin >> n >> m >> k >> l;
+    cin >> allCoinsCount >> friendsCount >> currentCoinsCount >> newCoinsCount;
 
-    auto possibleCoins = n - k;
+    long long giftCoins = ceil((newCoinsCount + currentCoinsCount) / (double)friendsCount);
 
-    long long giftCoins = ceil(l / (double)m);
-
-    giftCoins %= mod;
-    m %= mod;
-    possibleCoins %= mod;
-
-    if (giftCoins * m > possibleCoins) {
+    if (giftCoins * friendsCount > allCoinsCount) {
         cout << -1 << endl;
         return 0;
     }

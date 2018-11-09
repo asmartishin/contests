@@ -31,48 +31,35 @@ int main() {
 
     for (size_t i = 0; i < m; ++i) {
         cin >> s >> e;
-        if (s < e) {
-            colors[s - 1].push_back(e - 1);
-        } else {
-            colors[e - 1].push_back(s - 1);
-        }
+        colors[s - 1].push_back(e - 1);
     }
 
-//    for (const auto& c: colors) {
-//        cout << c.first << ' ';
-//        for (auto p: c.second) {
-//            cout << p << ' ';
-//        }
-//        cout << endl;
-//    }
-
-    vector<vector<int>> matrix(n, vector<int>(n, -1));
+    vector<vector<int>> matrix(n, vector<int>(n + m, -1));
     vector<vector<pair<int, int>>> result(n);
 
     for (size_t i = 0; i < n; ++i) {
         matrix[i][i] = i;
+        result[i].emplace_back(i, i);
     }
+
+    size_t col = n;
 
     for (const auto& c: colors) {
         for (auto p: c.second) {
-            matrix[p][c.first] = c.first;
+            matrix[c.first][col] = c.first;
+            matrix[p][col] = p;
+            result[c.first].emplace_back(c.first, col);
+            result[p].emplace_back(p, col);
+            ++col;
         }
     }
 
 //    for (const auto& row: matrix) {
 //        for (auto el: row) {
-//            cout << el << ' ';
+//            cout << el + 1 << ' ';
 //        }
 //        cout << endl;
 //    }
-
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = 0; j < n; ++j) {
-            if (matrix[j][i] != -1) {
-                result[i].emplace_back(j, i);
-            }
-        }
-    }
 
     for (size_t i = 0; i < n; ++i) {
         cout << result[i].size() << endl;
