@@ -19,6 +19,11 @@ using namespace std;
 
 #define endl '\n'
 
+int allRed = 0;
+int allBlue = 0;
+ int result = 0;
+
+
 void Dfs(const vector<vector<int>>& graph, const vector<int>& colors, vector<bool> &visited, vector<pair<int, int>>& redBlueCount, int v) {
     if (colors[v] == 1) {
         redBlueCount[v].first = 1;
@@ -34,6 +39,14 @@ void Dfs(const vector<vector<int>>& graph, const vector<int>& colors, vector<boo
         }
 
         Dfs(graph, colors, visited, redBlueCount, n);
+
+        if (redBlueCount[n].first == allRed && redBlueCount[n].second == 0) {
+            ++result;
+        }
+
+        if (redBlueCount[n].first == 0 && redBlueCount[n].second == allBlue) {
+            ++result;
+        }
 
         redBlueCount[v].first += redBlueCount[n].first;
         redBlueCount[v].second += redBlueCount[n].second;
@@ -56,6 +69,12 @@ int main() {
 
     for (size_t i = 0; i < n; ++i) {
         cin >> colors[i];
+
+        if (colors[i] == 1) {
+            ++allRed;
+        } else if (colors[i] == 2) {
+            ++allBlue;
+        }
     }
 
     for (size_t i = 0; i < n - 1; ++i) {
@@ -70,27 +89,6 @@ int main() {
     }
 
     Dfs(graph, colors, visited, redBlueCount, 0);
-
-//    for (size_t i = 0; i < n; ++i) {
-//        cout << i << ' ' << redBlueCount[i].first << ' ' << redBlueCount[i].second << endl;
-//    }
-
-    int result = 0;
-
-    for (const auto & [v, u]: edges) {
-        bool success = false;
-        if (!(redBlueCount[u].first > 0 && redBlueCount[u].second > 0) && !((redBlueCount[0].first - redBlueCount[u].first) > 0 && (redBlueCount[0].second - redBlueCount[u].second) > 0)) {
-            success = true;
-        }
-
-        if (!(redBlueCount[v].first > 0 && redBlueCount[v].second > 0) && !((redBlueCount[0].first - redBlueCount[v].first) > 0 && (redBlueCount[0].second - redBlueCount[v].second) > 0)) {
-            success = true;
-        }
-
-        if (success) {
-            ++result;
-        }
-    }
 
     cout << result << endl;
 
