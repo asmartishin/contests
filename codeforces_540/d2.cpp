@@ -40,7 +40,6 @@ int main() {
 
     int l = 1;
     int r = n + 1;
-    bool found = false;
 
     while (l < r) {
         int d = (l + r) / 2;
@@ -53,13 +52,12 @@ int main() {
 
         if (sum >= m) {
             r = d;
-            found = true;
         } else {
             l = d + 1;
         }
     }
 
-    if (!found) {
+    if (l == n + 1) {
         cout << -1 << endl;
     } else {
         cout << l << endl;
