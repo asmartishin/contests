@@ -60,7 +60,6 @@ private:
     vector<int> Rank;
 };
 
-unordered_map<int, vector<int>> graph;
 
 void dfs(int v, int& timer, unordered_map<int, vector<int>>& graph, unordered_map<int, bool>& visited, unordered_map<int, int>& exitTime, vector<int>& result) {
     visited[v] = true;
@@ -154,6 +153,7 @@ int main() {
     vector<pair<int, int>> edges;
     vector<int> result(n + m);
     vector<int> degree(n + m);
+    unordered_map<int, vector<int>> graph;
 
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < m; ++j) {
