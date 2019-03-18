@@ -19,19 +19,18 @@ using namespace std;
 
 long long binpow(long long n, long long p) {
     long long result = 1;
-    long long abs_p = abs(p);
 
-    while (abs_p) {
-        if (abs_p % 2 == 1) {
-            result *= n;
-            result %= 1000000007;
+    n %= 1000000007;
+
+    while (p) {
+        if (p & 1) {
+            result = (result * n) % 1000000007;
         }
-        n *= n;
-        n %= 1000000007;
-        abs_p >>= 1;
+        n = (n * n) % 1000000007;
+        p = p >> 1;
     }
 
-    return p > 0 ? result: 1 / result;
+    return result;
 }
 
 int main() {
@@ -43,6 +42,11 @@ int main() {
     int k;
 
     cin >> n >> m >> k;
+
+    if (k == -1 && (n % 2 != m % 2)) {
+        cout << 0 << endl;
+        return 0;
+    }
 
     cout << binpow(binpow(2, (n - 1)), m - 1) << endl;
 
