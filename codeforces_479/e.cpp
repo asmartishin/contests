@@ -19,34 +19,37 @@ using namespace std;
 #define endl '\n'
 
 
-bool dfsFindCycle(vector<unordered_set<int> > &graph, set<int> &remainingVertices, int startVertex) {
-    unordered_set<int> visitedVertices;
-    stack<int> stackVertices;
+bool dfsIsCycle(vector<unordered_set<int> > &graph, set<int> &remainingVertices, int startVertex) {
+    unordered_set<int> processedVertices;
+    stack<pair<int, int>> vertices;
+    bool cycle = false;
 
-    stackVertices.push(startVertex);
+    vertices.push(make_pair(startVertex, startVertex));
+    processedVertices.insert(startVertex);
 
-    while (!stackVertices.empty()) {
-        auto currentVertex = stackVertices.top();
-        stackVertices.pop();
+    while (!vertices.empty()) {
+        auto currentVertex = vertices.top();
+        vertices.pop();
+        remainingVertices.erase(currentVertex.first);
 
-        if (visitedVertices.find(currentVertex) != visitedVertices.end())
-            continue;
+        for (const auto &neighbourVertex: graph[currentVertex.first]) {
+            if (neighbourVertex == currentVertex.second) {
+                continue;
+            }
 
-        for (const auto &neighbourVertex: graph[currentVertex]) {
-            stackVertices.push(neighbourVertex);
+            if (processedVertices.find(neighbourVertex) != processedVertices.end()) {
+                cycle = true;
+            } else {
+                vertices.push(make_pair(neighbourVertex, currentVertex.first));
+                processedVertices.insert(neighbourVertex);
+            }
         }
 
-        visitedVertices.insert(currentVertex);
-        remainingVertices.erase(currentVertex);
     }
 
-    for (const auto &vertex: visitedVertices) {
-        if (graph[vertex].size() != 2)
-            return false;
-    }
-
-    return true;
+    return cycle;
 }
+
 
 int countCycleComponents(vector<unordered_set<int> > &graph) {
     set<int> remainingVertices;
@@ -57,8 +60,9 @@ int countCycleComponents(vector<unordered_set<int> > &graph) {
 
     while (!remainingVertices.empty()) {
         int startVertex = *remainingVertices.begin();
-       if (dfsFindCycle(graph, remainingVertices, startVertex))
+        if (dfsIsCycle(graph, remainingVertices, startVertex)) {
             ++result;
+        }
     }
 
     return result;
